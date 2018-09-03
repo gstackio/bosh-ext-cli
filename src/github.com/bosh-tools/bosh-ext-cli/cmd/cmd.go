@@ -71,6 +71,9 @@ func (c Cmd) Execute() (cmdErr error) {
 	case *WebOpts:
 		return NewWebCmd(deps.CmdRunner, deps.UI, deps.Logger).Run(*opts)
 
+	case *Web2Opts:
+		return NewWeb2Cmd(deps.CmdRunner, deps.UI, deps.Logger).Run(*opts)
+
 	case *MessageOpts:
 		deps.UI.PrintBlock([]byte(opts.Message))
 		return nil
