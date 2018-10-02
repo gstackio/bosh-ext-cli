@@ -1,4 +1,4 @@
-package web2
+package visualize
 
 const eventsTemplate string = `
 <div class="row">

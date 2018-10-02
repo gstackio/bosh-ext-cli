@@ -1,4 +1,4 @@
-package web2
+package visualize
 
 const logsViewerJS string = `
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.3.3/ace.js" type="text/javascript" charset="utf-8"></script>

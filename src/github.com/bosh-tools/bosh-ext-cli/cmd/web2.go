@@ -10,10 +10,10 @@ import (
 	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 	boshsys "github.com/cloudfoundry/bosh-utils/system"
 
-	"github.com/bosh-tools/bosh-ext-cli/web2"
+	"github.com/bosh-tools/bosh-ext-cli/visualize"
 )
 
-type Web2Cmd struct {
+type VisualizeCmd struct {
 	cmdRunner boshsys.CmdRunner
 	ui        boshui.UI
 
@@ -33,8 +33,8 @@ type RequestBody struct {
 	Arguments []RequestArgument `json:"arguments"`
 }
 
-func NewWeb2Cmd(cmdRunner boshsys.CmdRunner, ui boshui.UI, logger boshlog.Logger) Web2Cmd {
-	return Web2Cmd{
+func NewVisualizeCmd(cmdRunner boshsys.CmdRunner, ui boshui.UI, logger boshlog.Logger) VisualizeCmd {
+	return VisualizeCmd{
 		cmdRunner: cmdRunner,
 		ui:        ui,
 
@@ -77,7 +77,7 @@ func NewWeb2Cmd(cmdRunner boshsys.CmdRunner, ui boshui.UI, logger boshlog.Logger
 	}
 }
 
-func (c Web2Cmd) Run(opts Web2Opts) error {
+func (c VisualizeCmd) Run(opts VisualizeOpts) error {
 	http.HandleFunc("/", c.serveHomePage)
 	http.HandleFunc("/deployments", c.serveDeploymentsPage)
 	http.HandleFunc("/events", c.serveEventsPage)
@@ -95,62 +95,62 @@ func (c Web2Cmd) Run(opts Web2Opts) error {
 	return http.ListenAndServe(addr, nil)
 }
 
-func (c Web2Cmd) serveHomePage(w http.ResponseWriter, r *http.Request) {
+func (c VisualizeCmd) serveHomePage(w http.ResponseWriter, r *http.Request) {
 	c.logger.Debug(c.logTag, "Serving Home Page")
-	renderedPage, _ := web2.GenerateBOSHPage("home")
+	renderedPage, _ := visualize.GenerateBOSHPage("home")
 	fmt.Fprintf(w, renderedPage)
 }
 
-func (c Web2Cmd) serveDeploymentsPage(w http.ResponseWriter, r *http.Request) {
+func (c VisualizeCmd) serveDeploymentsPage(w http.ResponseWriter, r *http.Request) {
 	c.logger.Debug(c.logTag, "Serving Deployments Page")
-	renderedPage, _ := web2.GenerateBOSHPage("deployments")
+	renderedPage, _ := visualize.GenerateBOSHPage("deployments")
 	fmt.Fprintf(w, renderedPage)
 }
 
-func (c Web2Cmd) serveEventsPage(w http.ResponseWriter, r *http.Request) {
+func (c VisualizeCmd) serveEventsPage(w http.ResponseWriter, r *http.Request) {
 	c.logger.Debug(c.logTag, "Serving Events Page")
-	renderedPage, _ := web2.GenerateBOSHPage("events")
+	renderedPage, _ := visualize.GenerateBOSHPage("events")
 	fmt.Fprintf(w, renderedPage)
 }
 
-func (c Web2Cmd) serveTasksLogsPage(w http.ResponseWriter, r *http.Request) {
+func (c VisualizeCmd) serveTasksLogsPage(w http.ResponseWriter, r *http.Request) {
 	c.logger.Debug(c.logTag, "Serving Tasks Logs Page")
-	renderedPage, _ := web2.GenerateBOSHPage("tasks-logs")
+	renderedPage, _ := visualize.GenerateBOSHPage("tasks-logs")
 	fmt.Fprintf(w, renderedPage)
 }
 
-func (c Web2Cmd) serveReleasesPage(w http.ResponseWriter, r *http.Request) {
+func (c VisualizeCmd) serveReleasesPage(w http.ResponseWriter, r *http.Request) {
 	c.logger.Debug(c.logTag, "Serving releases Page")
-	renderedPage, _ := web2.GenerateBOSHPage("releases")
+	renderedPage, _ := visualize.GenerateBOSHPage("releases")
 	fmt.Fprintf(w, renderedPage)
 }
 
-func (c Web2Cmd) serveLinkProvidersPage(w http.ResponseWriter, r *http.Request) {
+func (c VisualizeCmd) serveLinkProvidersPage(w http.ResponseWriter, r *http.Request) {
 	c.logger.Debug(c.logTag, "Serving Link Providers Page")
-	renderedPage, _ := web2.GenerateBOSHPage("link-providers")
+	renderedPage, _ := visualize.GenerateBOSHPage("link-providers")
 	fmt.Fprintf(w, renderedPage)
 }
 
-func (c Web2Cmd) serveTasksPage(w http.ResponseWriter, r *http.Request) {
+func (c VisualizeCmd) serveTasksPage(w http.ResponseWriter, r *http.Request) {
 	c.logger.Debug(c.logTag, "Serving tasks Page")
-	renderedPage, _ := web2.GenerateBOSHPage("tasks")
+	renderedPage, _ := visualize.GenerateBOSHPage("tasks")
 	fmt.Fprintf(w, renderedPage)
 }
 
-func (c Web2Cmd) serveCSS(w http.ResponseWriter, r *http.Request) {
+func (c VisualizeCmd) serveCSS(w http.ResponseWriter, r *http.Request) {
 	c.logger.Debug(c.logTag, "Serving CSS")
 	w.Header().Add("Content-Type", "text/css")
 
-	fmt.Fprintf(w, web2.AdminCSS)
+	fmt.Fprintf(w, visualize.AdminCSS)
 }
 
-func (c Web2Cmd) serveJS(w http.ResponseWriter, r *http.Request) {
+func (c VisualizeCmd) serveJS(w http.ResponseWriter, r *http.Request) {
 	c.logger.Debug(c.logTag, "Serving JS")
 	w.Header().Add("Content-Type", "application/javascript")
-	fmt.Fprintf(w, web2.AdminJS)
+	fmt.Fprintf(w, visualize.AdminJS)
 }
 
-func (c Web2Cmd) serveAPICommand(w http.ResponseWriter, r *http.Request) {
+func (c VisualizeCmd) serveAPICommand(w http.ResponseWriter, r *http.Request) {
 	c.logger.Debug(c.logTag, "Serving API command")
 
 	// Read body
@@ -253,7 +253,7 @@ func (c Web2Cmd) serveAPICommand(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (c Web2Cmd) fetchCmdOption(cmdOptions []apiOpt, optName string) (apiOpt, bool) {
+func (c VisualizeCmd) fetchCmdOption(cmdOptions []apiOpt, optName string) (apiOpt, bool) {
 	for _, opt := range cmdOptions {
 		if optName == opt.Name {
 			return opt, true

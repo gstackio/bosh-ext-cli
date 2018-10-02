@@ -1,4 +1,4 @@
-package web2
+package visualize
 
 const linkProvidersJS string = `
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js" type="text/javascript" charset="utf-8"></script>

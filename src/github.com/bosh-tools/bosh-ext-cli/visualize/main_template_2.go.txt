@@ -1,4 +1,4 @@
-// package web2
+// package visualizer
 
 // func generateTemplate(body, customJS string) string {
 

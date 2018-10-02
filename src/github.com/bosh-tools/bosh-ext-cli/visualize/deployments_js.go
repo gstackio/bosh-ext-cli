@@ -1,4 +1,4 @@
-package web2
+package visualize
 
 const deploymentsJS string = `
   <script type="text/template" id="deploymentsList">

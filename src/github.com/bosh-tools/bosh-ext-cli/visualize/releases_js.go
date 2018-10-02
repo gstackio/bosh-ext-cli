@@ -1,4 +1,4 @@
-package web2
+package visualize
 
 const releasesJS string = `
 <script type="text/javascript">

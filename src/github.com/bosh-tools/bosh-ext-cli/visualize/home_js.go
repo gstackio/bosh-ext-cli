@@ -1,4 +1,4 @@
-package web2
+package visualize
 
 const homeJS string = `
   <script type="text/javascript">

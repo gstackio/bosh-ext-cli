@@ -21,8 +21,8 @@ type BoshOpts struct {
 
 	DebugTask DebugTaskOpts `command:"debug-task" description:"Interpret task debug log"`
 
-	Web  WebOpts  `command:"web" description:"Browser based CLI experience"`
-	Web2 Web2Opts `command:"web2" description:"Browser based CLI experience"`
+	Web       WebOpts       `command:"web" description:"Browser based CLI experience"`
+	Visualize VisualizeOpts `command:"visualize" description:"Browser based CLI experience"`
 }
 
 type HelpOpts struct {
@@ -81,7 +81,7 @@ type WebOpts struct {
 	cmd
 }
 
-type Web2Opts struct {
+type VisualizeOpts struct {
 	ListenPort int    `long:"port" description:"Port to listen on"    default:"9090"`
 	ListenAddr string `long:"addr" description:"Address to listen on" default:"127.0.0.1"`
 	cmd
