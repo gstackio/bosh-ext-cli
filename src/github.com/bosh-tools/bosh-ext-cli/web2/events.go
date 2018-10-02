@@ -37,10 +37,11 @@ const eventsTemplate string = `
 	</div>
 </div>
 
-<table id="jamiltable" class="events-table table table-hover table-bordered" width="100%"w>
+<table id="jamiltable" class="events-table table table-hover table-bordered" width="100%">
 </table>
 `
 
+// TODO
 // poll tasks tables every seconds
 // puts releases in the hidden coulmn of the deployments
 // List of releases and stemcells to upload

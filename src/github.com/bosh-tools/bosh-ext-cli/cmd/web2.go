@@ -42,33 +42,36 @@ func NewWeb2Cmd(cmdRunner boshsys.CmdRunner, ui boshui.UI, logger boshlog.Logger
 		logger: logger,
 
 		allowedCmds: map[string][]apiOpt{
-			"env":         []apiOpt{},
-			"deployments": []apiOpt{},
-			"instances": []apiOpt{
-				apiOpt{Name: "deployment"},
-				apiOpt{Name: "ps", WithoutValue: true},
-				apiOpt{Name: "details", WithoutValue: true},
+			"env":         {},
+			"deployments": {},
+			"instances": {
+				{Name: "deployment"},
+				{Name: "ps", WithoutValue: true},
+				{Name: "details", WithoutValue: true},
 			},
-			"releases": []apiOpt{},
-			"tasks": []apiOpt{
-				apiOpt{Name: "recent", WithoutValue: true},
-				apiOpt{Name: "all", WithoutValue: true},
+			"curl": {
+				{Name: "path", Curl: true, Positional: true},
 			},
-			"task": []apiOpt{
-				apiOpt{Name: "id", Positional: true},
-				apiOpt{Name: "debug", WithoutValue: true},
+			"releases": {},
+			"tasks": {
+				{Name: "recent", WithoutValue: true},
+				{Name: "all", WithoutValue: true},
 			},
-			"events": []apiOpt{
-				apiOpt{Name: "action", EqualsSign: true},
-				apiOpt{Name: "deployment", EqualsSign: true},
-				apiOpt{Name: "instance", EqualsSign: true},
-				apiOpt{Name: "object-name", EqualsSign: true},
-				apiOpt{Name: "object-type", EqualsSign: true},
-				apiOpt{Name: "task", EqualsSign: true},
-				apiOpt{Name: "event-user", EqualsSign: true},
-				apiOpt{Name: "before", EqualsSign: true},
-				apiOpt{Name: "after", EqualsSign: true},
-				apiOpt{Name: "before-id", EqualsSign: true},
+			"task": {
+				{Name: "id", Positional: true},
+				{Name: "debug", WithoutValue: true},
+			},
+			"events": {
+				{Name: "action", EqualsSign: true},
+				{Name: "deployment", EqualsSign: true},
+				{Name: "instance", EqualsSign: true},
+				{Name: "object-name", EqualsSign: true},
+				{Name: "object-type", EqualsSign: true},
+				{Name: "task", EqualsSign: true},
+				{Name: "event-user", EqualsSign: true},
+				{Name: "before", EqualsSign: true},
+				{Name: "after", EqualsSign: true},
+				{Name: "before-id", EqualsSign: true},
 			},
 		},
 	}
@@ -80,6 +83,7 @@ func (c Web2Cmd) Run(opts Web2Opts) error {
 	http.HandleFunc("/events", c.serveEventsPage)
 	http.HandleFunc("/tasks-logs", c.serveTasksLogsPage)
 	http.HandleFunc("/releases", c.serveReleasesPage)
+	http.HandleFunc("/link-providers", c.serveLinkProvidersPage)
 	http.HandleFunc("/tasks", c.serveTasksPage)
 	http.HandleFunc("/css/sb-admin.css", c.serveCSS)
 	http.HandleFunc("/js/sb-admin.min.js", c.serveJS)
@@ -118,6 +122,12 @@ func (c Web2Cmd) serveTasksLogsPage(w http.ResponseWriter, r *http.Request) {
 func (c Web2Cmd) serveReleasesPage(w http.ResponseWriter, r *http.Request) {
 	c.logger.Debug(c.logTag, "Serving releases Page")
 	renderedPage, _ := web2.GenerateBOSHPage("releases")
+	fmt.Fprintf(w, renderedPage)
+}
+
+func (c Web2Cmd) serveLinkProvidersPage(w http.ResponseWriter, r *http.Request) {
+	c.logger.Debug(c.logTag, "Serving Link Providers Page")
+	renderedPage, _ := web2.GenerateBOSHPage("link-providers")
 	fmt.Fprintf(w, renderedPage)
 }
 
@@ -170,7 +180,7 @@ func (c Web2Cmd) serveAPICommand(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	apiOpts, found := c.allowedCmds[cmdName]
+	cmdAllowedApiOpts, found := c.allowedCmds[cmdName]
 	if !found {
 		c.logger.Error(c.logTag, "Disallowed cmd '%s'", cmdName)
 		w.WriteHeader(http.StatusBadRequest)
@@ -179,25 +189,29 @@ func (c Web2Cmd) serveAPICommand(w http.ResponseWriter, r *http.Request) {
 
 	cmd := boshsys.Command{
 		Name: "bosh",
-		Args: []string{cmdName, "--json"},
+		Args: []string{cmdName},
 	}
 
-	providedOpts := theRequest.Arguments
+	if cmdName != "curl" {
+		cmd.Args = append(cmd.Args, "--json")
+	}
 
-	for _, providedOpt := range providedOpts {
+	requestPassedInOpts := theRequest.Arguments
 
-		if len(providedOpt.Name) == 0 {
+	for _, requestProvidedOpt := range requestPassedInOpts {
+
+		if len(requestProvidedOpt.Name) == 0 {
 			continue
 		}
-		builtinOpt, found := c.fetchCmdOption(apiOpts, providedOpt.Name)
+
+		builtinOpt, found := c.fetchCmdOption(cmdAllowedApiOpts, requestProvidedOpt.Name)
 		if !found {
 			continue
 		}
 
-		providedVal := providedOpt.Value
+		providedVal := requestProvidedOpt.Value
 
 		if builtinOpt.WithoutValue {
-
 			if len(providedVal) > 0 {
 				c.logger.Error(c.logTag, "Expected opt '%s' to not have value", builtinOpt.Name)
 				w.WriteHeader(http.StatusBadRequest)

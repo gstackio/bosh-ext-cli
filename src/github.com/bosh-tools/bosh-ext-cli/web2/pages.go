@@ -33,6 +33,11 @@ var boshPages = map[string]BOSHPage{
 		BodyTemplate: releasesTemplate,
 		CustomJS:     releasesJS,
 	},
+	"link-providers": BOSHPage{
+		Title:        "Link Providers",
+		BodyTemplate: linkProvidersTemplate,
+		CustomJS:     linkProvidersJS,
+	},
 	"tasks-logs": BOSHPage{
 		Title:        "Task Logs",
 		BodyTemplate: logsViewerTemplate,

@@ -24,7 +24,7 @@ body.fixed-nav {
 
 .content-wrapper {
   min-height: calc(100vh - 56px);
-  padding-top: 1rem;
+  padding-top: 0.85rem;
 }
 
 .scroll-to-top {
@@ -280,6 +280,10 @@ body.sidenav-toggled #mainNav.static-top #sidenavToggler i {
   transform: scaleX(-1);
   filter: FlipH;
   -ms-filter: 'FlipH';
+}
+
+body {
+  font-size: 0.85rem;
 }
 
 .content-wrapper {

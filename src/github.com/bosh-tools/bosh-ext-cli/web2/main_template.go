@@ -11,49 +11,25 @@ func generateTemplate(body, customJS string) string {
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>{{.Title}} Template</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
   <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css"/>
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.5.1/css/buttons.bootstrap4.min.css"/>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.min.css"/>
   <link href="css/sb-admin.css" rel="stylesheet">
 </head>
 
-<body class="fixed-nav sticky-footer bg-dark">
+<body>
 
   <!-- Navigation-->` +
 		navTemplate +
 		`<!-- END Navigation-->
 
-  <div class="content-wrapper">
-    <div class="container-fluid">
-      
-      <!-- Breadcrumbs-->
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item">
-          <a href="/">Home</a>
-        </li>
-        <li class="breadcrumb-item active">{{.Title}}</li>
-      </ol>
-      <!-- END Breadcrumbs -->
-      
-
-      <!-- ============================================= -->
-      <!-- Body -->` +
+    <main role="main" class="container" style="max-width: 2000px; padding-top: 60px; margin-right: 15px; margin-left: 15px;">  {{.Title}}` +
 		body +
 		`<!-- ============================================= -->
-    </div>
-    <!-- /.container-fluid-->
-    <!-- /.content-wrapper-->
+    </main>
 
-
-
-    <footer class="sticky-footer">
-      <div class="container">
-        <div class="text-center">
-          <small>Copyright © Your Website 2018</small>
-        </div>
-      </div>
-    </footer>
 
     <!-- ============================================= -->
     <!-- ============================================= -->

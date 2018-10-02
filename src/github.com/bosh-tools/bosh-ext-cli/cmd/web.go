@@ -26,6 +26,7 @@ type apiOpt struct {
 	WithoutValue bool
 	Positional   bool
 	EqualsSign   bool
+	Curl         bool
 }
 
 func NewWebCmd(cmdRunner boshsys.CmdRunner, ui boshui.UI, logger boshlog.Logger) WebCmd {
