@@ -25,7 +25,7 @@ func generateTemplate(body, customJS string) string {
 		navTemplate +
 		`<!-- END Navigation-->
 
-    <main role="main" class="container" style="max-width: 2000px; padding-top: 60px; margin-right: 15px; margin-left: 15px;">  {{.Title}}` +
+    <main role="main" class="container" style="max-width: 2000px; padding-top: 60px; margin-right: 15px; margin-left: 15px;"> <h3>{{.Title}}<span id="title-description" class="invisible text-primary"><span></h3>` +
 		body +
 		`<!-- ============================================= -->
     </main>

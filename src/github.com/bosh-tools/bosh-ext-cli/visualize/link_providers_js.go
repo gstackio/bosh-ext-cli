@@ -34,6 +34,7 @@ function formatDetailsRow ( d ) {
     return "<pre>"+syntaxHighlight(str)+"</pre>";
 }
 
+// Source: https://stackoverflow.com/questions/4810841/how-can-i-pretty-print-json-using-javascript
 function syntaxHighlight(json) {
     json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
@@ -98,8 +99,6 @@ function populateLinkProvidersTable ( providersList ) {
         ordering: true,
         buttons: [ 'pageLength']
     } );
-
-    providersTable.buttons().container().appendTo( '#jamiltable_wrapper .col-md-6:eq(0)' );
 
     var detailRows = [];
     $('#linkProvidersTable tbody').on( 'click', 'tr td.details-control', function () {
@@ -170,6 +169,7 @@ $(function() {
     var currentDeploymentName = getUrlParameter('deployment');
     if (currentDeploymentName) {
         fetchAndPopulateLinkProvidersForDeployment(currentDeploymentName);
+        $("#title-description").removeClass("invisible").addClass("visible").text(" : " + currentDeploymentName);
     }
 
     $("#linksProvidersLoadingSpinner").remove();
