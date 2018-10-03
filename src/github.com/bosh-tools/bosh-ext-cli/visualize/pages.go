@@ -13,37 +13,42 @@ type BOSHPage struct {
 }
 
 var boshPages = map[string]BOSHPage{
-	"home": BOSHPage{
+	"home": {
 		Title:        "My Dashboard",
 		BodyTemplate: homeTemplate,
 		CustomJS:     homeJS,
 	},
-	"deployments": BOSHPage{
+	"deployments": {
 		Title:        "Deployments",
 		BodyTemplate: deploymentsTemplate,
 		CustomJS:     deploymentsJS,
 	},
-	"events": BOSHPage{
+	"events": {
 		Title:        "Events",
 		BodyTemplate: eventsTemplate,
 		CustomJS:     eventsJS,
 	},
-	"releases": BOSHPage{
+	"releases": {
 		Title:        "Releases",
 		BodyTemplate: releasesTemplate,
 		CustomJS:     releasesJS,
 	},
-	"link-providers": BOSHPage{
+	"link-providers": {
 		Title:        "Link Providers",
 		BodyTemplate: linkProvidersTemplate,
 		CustomJS:     linkProvidersJS,
 	},
-	"tasks-logs": BOSHPage{
+	"link-consumers": {
+		Title:        "Link Consumers",
+		BodyTemplate: linkConsumersDetailedTemplate,
+		CustomJS:     linkConsumersDetailedJS,
+	},
+	"tasks-logs": {
 		Title:        "Task Logs",
 		BodyTemplate: logsViewerTemplate,
 		CustomJS:     logsViewerJS,
 	},
-	"tasks": BOSHPage{
+	"tasks": {
 		Title:        "Tasks",
 		BodyTemplate: tasksTemplate,
 		CustomJS:     tasksJS,

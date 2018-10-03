@@ -113,8 +113,6 @@ $(function() {
 	        buttons: [ 'pageLength'],
 	        createdRow: createdRowCallback
 	    } );
-	 
-	    table.buttons().container().appendTo( '#jamiltable_wrapper .col-md-6:eq(0)' );
 
         var detailRows = [];
 

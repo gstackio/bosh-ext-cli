@@ -45,9 +45,6 @@ $(function() {
 	        createdRow: createdRowCallback,
 	        buttons: ['pageLength']
 	    } );
-	 
-	    table.buttons().container().appendTo( '#jamiltable_wrapper .col-md-6:eq(0)' );
-
     });
 });
 

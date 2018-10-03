@@ -64,6 +64,7 @@ function populateLinkProvidersTable ( providersList ) {
                 "data":           null,
                 "defaultContent": ""
             },
+            { data: "id", title: "ID" },
             { data: "name", title: "Name" },
             {
                 data: {name : "name"},
@@ -153,10 +154,6 @@ function fetchAndPopulateDeployments () {
             });
             deploymentListDropDown.chosen();
         });
-}
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 $(function() {
