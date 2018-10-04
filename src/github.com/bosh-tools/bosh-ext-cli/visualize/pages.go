@@ -38,10 +38,15 @@ var boshPages = map[string]BOSHPage{
 		BodyTemplate: linkProvidersTemplate,
 		CustomJS:     linkProvidersJS,
 	},
-	"link-consumers": {
+	"link-consumers-detailed": {
 		Title:        "Link Consumers",
 		BodyTemplate: linkConsumersDetailedTemplate,
 		CustomJS:     linkConsumersDetailedJS,
+	},
+	"links-deployment-dependencies": {
+		Title:        "Links Deployment Dependencies",
+		BodyTemplate: linksDeploymentDependenciesTemplate,
+		CustomJS:     linksDeploymentDependenciesJS,
 	},
 	"tasks-logs": {
 		Title:        "Task Logs",

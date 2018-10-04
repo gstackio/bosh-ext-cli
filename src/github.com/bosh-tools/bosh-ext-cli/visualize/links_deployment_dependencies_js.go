@@ -1,7 +1,11 @@
 package visualize
 
-const linkConsumersDetailedJS string = `
+const linksDeploymentDependenciesJS = `
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://d3js.org/d3.v3.min.js"></script>
+<script src="https://cdn.rawgit.com/newrelic-forks/d3-plugins-sankey/master/sankey.js"></script>
+<script src="https://cdn.rawgit.com/misoproject/d3.chart/master/d3.chart.min.js"></script>
+<script src="https://cdn.rawgit.com/q-m/d3.chart.sankey/master/d3.chart.sankey.min.js"></script>
 
 <style type="text/css">
 pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
@@ -10,6 +14,25 @@ pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
 .boolean { color: blue; }
 .null { color: magenta; }
 .key { color: red; }
+
+#chart {
+height: 500px;
+font: 13px sans-serif;
+}
+.node rect {
+fill-opacity: .9;
+shape-rendering: crispEdges;
+stroke-width: 0;
+}
+.node text {
+text-shadow: 0 1px 0 #fff;
+}
+.link {
+fill: none;
+stroke: #000;
+stroke-opacity: .2;
+}
+
 </style>
 
 <script type="text/javascript">
@@ -224,61 +247,49 @@ $(function() {
                 // match provider for each link consumer
 
                 // Get all link consumers of this deployment
-                var linkConsumersReq = {"command":"curl", "arguments": [{"name": "path", "value": "/link_consumers?deployment="+currentDeploymentName}]};
+                var linkConsumersReq = {"command":"curl", "arguments": [{"name": "path", "value": "/link_providers?deployment="+currentDeploymentName}]};
                 $.post("/api/command", JSON.stringify(linkConsumersReq))
                     .done(function(data) {
-                        var consumersList = data;
+                        var currentDeploymentProviders = data.reduce(function(map, obj) {
+                            map[obj["id"]] = obj;
+                            return map;
+                        }, {});
 
-                        // get all the links of this deployment
-                        var linksReq = {"command":"curl", "arguments": [{"name": "path", "value": "/links?deployment="+currentDeploymentName}]};
-                        $.post("/api/command", JSON.stringify(linksReq))
-                            .done(function(data) {
-                                var linksList = data;
-                                var hashedLinksList = linksList.reduce(function(map, obj) {
-                                    map[obj["link_consumer_id"]] = obj;
-                                    return map;
-                                }, {});
+                        // get all the links of all the deployments
+                        // select links which have their link_provider_id belongs to the current deployment link providers
+                        // pick the link which have the provider in the currentDeploymentProviders
 
-                                var numberOfTotalRequests = deploymentsList.length; // number of total requests
-                                var aggregatedProvidersList = [];
-                                var consumerProviderLinkList = [];
+                        var numberOfTotalRequests = deploymentsList.length; // number of total requests
+                        var aggregatedLinksList = {}; // key: deployment name, value: list of links
+                        var consumerProviderLinkList = [];
 
-                                $(deploymentsList).each(function() {
-                                    var deploymentName = this.name;
-                                    var providersReq = {"command":"curl", "arguments": [{"name": "path", "value": "/link_providers?deployment="+deploymentName}]};
-                                    $.post("/api/command", JSON.stringify(providersReq))
-                                        .done(function(data) {
-                                            $.merge( aggregatedProvidersList, data );
-                                            numberOfTotalRequests -= 1;
-                                            if(numberOfTotalRequests === 0) {
-                                                var hashedProvidersList = aggregatedProvidersList.reduce(function(map, obj) {
-                                                    map[obj.id] = obj;
-                                                    return map;
-                                                }, {});
+                        $(deploymentsList).each(function() {
+                            var deploymentName = this.name;
+                            var linksReq = {"command":"curl", "arguments": [{"name": "path", "value": "/links?deployment="+deploymentName}]};
+                            $.post("/api/command", JSON.stringify(linksReq))
+                                .done(function(data) {
+                                    aggregatedLinksList[deploymentName] = data
+                                    numberOfTotalRequests -= 1;
 
-                                                $.each(consumersList, function (i, value) {
-                                                    var tableBlob = {"consumer": value};
-                                                    var consumerID = value.id;
-                                                    var foundLink = hashedLinksList[consumerID];
-                                                    if (foundLink) {
-                                                        // there is a link for the consumer
-                                                        tableBlob["link"] = foundLink;
-                                                        var linkProviderId = foundLink["link_provider_id"];
-                                                        if (hashedProvidersList[linkProviderId]) {
-                                                            tableBlob["provider"] = hashedProvidersList[linkProviderId];
-                                                        }
-                                                    }
-                                                    consumerProviderLinkList.push(tableBlob);
-                                                });
+                                    if(numberOfTotalRequests === 0) {
 
-                                                populateLinkConsumersDetailedTable(consumerProviderLinkList);
-                                                populateStatistics(consumerProviderLinkList, currentDeploymentName);
-                                                $("#linksConsumersDetailedLoadingSpinner").remove();
-                                                $("#linksConsumersDetailedContents").removeClass("invisible").addClass("visible");
-                                            }
+                                        // all links of all deployments were retrieved
+                                        // select links which have their link_provider_id belongs to the current deployment link providers
+                                        var result = [];
+                                        $.each( aggregatedLinksList, function( someDeploymentName, linksList ) {
+                                            $(linksList).each(function (i, linkObj) {
+                                                if (currentDeploymentProviders[linkObj["link_provider_id"]]) {
+                                                    // there is a link consmued from this deployment,
+                                                    result.push(someDeploymentName);
+                                                }
+                                            })
                                         });
+
+                                        console.log(result);
+                                        console.log(Array.from(new Set(result)));
+                                    }
                                 });
-                            });
+                        });
                     });
             } else {
                 $("#linksConsumersDetailedLoadingSpinner").remove();
@@ -287,7 +298,7 @@ $(function() {
         });
 
     $("#deployment-select").change(function () {
-        window.location.href = "/link-consumers-detailed?deployment=" + $("#deployment-select").find(":selected").text();
+        window.location.href = "/links-deployments-dependencies?deployment=" + $("#deployment-select").find(":selected").text();
     });
 });
 

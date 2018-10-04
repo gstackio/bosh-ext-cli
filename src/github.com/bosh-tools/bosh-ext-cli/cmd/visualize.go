@@ -84,7 +84,8 @@ func (c VisualizeCmd) Run(opts VisualizeOpts) error {
 	http.HandleFunc("/tasks-logs", c.serveTasksLogsPage)
 	http.HandleFunc("/releases", c.serveReleasesPage)
 	http.HandleFunc("/link-providers", c.serveLinkProvidersPage)
-	http.HandleFunc("/link-consumers", c.serveLinkConsumersPage)
+	http.HandleFunc("/link-consumers-detailed", c.serveLinkConsumersDetailedPage)
+	http.HandleFunc("/links-deployments-dependencies", c.serveLinksDeploymentDependencies)
 	http.HandleFunc("/tasks", c.serveTasksPage)
 	http.HandleFunc("/css/sb-admin.css", c.serveCSS)
 	http.HandleFunc("/js/sb-admin.min.js", c.serveJS)
@@ -132,9 +133,15 @@ func (c VisualizeCmd) serveLinkProvidersPage(w http.ResponseWriter, r *http.Requ
 	fmt.Fprintf(w, renderedPage)
 }
 
-func (c VisualizeCmd) serveLinkConsumersPage(w http.ResponseWriter, r *http.Request) {
+func (c VisualizeCmd) serveLinkConsumersDetailedPage(w http.ResponseWriter, r *http.Request) {
 	c.logger.Debug(c.logTag, "Serving Link Consumers Page")
-	renderedPage, _ := visualize.GenerateBOSHPage("link-consumers")
+	renderedPage, _ := visualize.GenerateBOSHPage("link-consumers-detailed")
+	fmt.Fprintf(w, renderedPage)
+}
+
+func (c VisualizeCmd) serveLinksDeploymentDependencies(w http.ResponseWriter, r *http.Request) {
+	c.logger.Debug(c.logTag, "Serving Link Consumers Page")
+	renderedPage, _ := visualize.GenerateBOSHPage("links-deployment-dependencies")
 	fmt.Fprintf(w, renderedPage)
 }
 
