@@ -58,9 +58,10 @@ $(function() {
 			});
 
 		    releases.forEach(function(release) {
-		      release["deployments_count"] = release["deployments"].length + " deployments";
+		      release["deployments_count"] = release["deployments"].length;
 			});
 
+            $("#releasesLoadingSpinner").remove();
 		    var table = $('#releasesTable').DataTable( {
 		        data: releases,
 		        columns: [
@@ -73,10 +74,10 @@ $(function() {
 		            { data: "name", title: "name" },
 		            { data: "version", title: "Version" },
 		            { data: "commit_hash", title: "Commit Hash" },
-		            { data: "deployments_count", title: "Used In" }
+		            { data: "deployments_count", title: "Deployments using it" }
 		        ],
 		        lengthChange: false,
-		        pageLength: 100,
+		        pageLength: 200,
 		        ordering: true,
 		        buttons: [ 'pageLength']
 		    } );

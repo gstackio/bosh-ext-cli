@@ -28,6 +28,16 @@ var boshPages = map[string]BOSHPage{
 		BodyTemplate: eventsTemplate,
 		CustomJS:     eventsJS,
 	},
+	"configs": {
+		Title:        "Configs",
+		BodyTemplate: configsTemplate,
+		CustomJS:     configsJS,
+	},
+	"variables": {
+		Title:        "Variables",
+		BodyTemplate: variablesTemplate,
+		CustomJS:     variablesJS,
+	},
 	"releases": {
 		Title:        "Releases",
 		BodyTemplate: releasesTemplate,

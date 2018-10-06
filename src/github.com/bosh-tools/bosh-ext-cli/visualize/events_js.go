@@ -108,7 +108,7 @@ $(function() {
 	            // { data: "instance", title: "Instance" }
 	        ],
 	        lengthChange: false,
-	        pageLength: 100,
+            paging: false,
 	        ordering: false,
 	        buttons: [ 'pageLength'],
 	        createdRow: createdRowCallback

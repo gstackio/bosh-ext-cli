@@ -50,7 +50,11 @@ func NewVisualizeCmd(cmdRunner boshsys.CmdRunner, ui boshui.UI, logger boshlog.L
 				{Name: "details", WithoutValue: true},
 			},
 			"curl": {
-				{Name: "path", Curl: true, Positional: true},
+				{Name: "path", Positional: true},
+			},
+			"credhub": {
+				{Name: "id", EqualsSign: true},
+				{Name: "output-json", WithoutValue: true},
 			},
 			"releases": {},
 			"tasks": {
@@ -81,6 +85,8 @@ func (c VisualizeCmd) Run(opts VisualizeOpts) error {
 	http.HandleFunc("/", c.serveHomePage)
 	http.HandleFunc("/deployments", c.serveDeploymentsPage)
 	http.HandleFunc("/events", c.serveEventsPage)
+	http.HandleFunc("/configs", c.serveConfigsPage)
+	http.HandleFunc("/variables", c.serveVariablesPage)
 	http.HandleFunc("/tasks-logs", c.serveTasksLogsPage)
 	http.HandleFunc("/releases", c.serveReleasesPage)
 	http.HandleFunc("/link-providers", c.serveLinkProvidersPage)
@@ -112,6 +118,18 @@ func (c VisualizeCmd) serveDeploymentsPage(w http.ResponseWriter, r *http.Reques
 func (c VisualizeCmd) serveEventsPage(w http.ResponseWriter, r *http.Request) {
 	c.logger.Debug(c.logTag, "Serving Events Page")
 	renderedPage, _ := visualize.GenerateBOSHPage("events")
+	fmt.Fprintf(w, renderedPage)
+}
+
+func (c VisualizeCmd) serveConfigsPage(w http.ResponseWriter, r *http.Request) {
+	c.logger.Debug(c.logTag, "Serving Configs Page")
+	renderedPage, _ := visualize.GenerateBOSHPage("configs")
+	fmt.Fprintf(w, renderedPage)
+}
+
+func (c VisualizeCmd) serveVariablesPage(w http.ResponseWriter, r *http.Request) {
+	c.logger.Debug(c.logTag, "Serving Variables Page")
+	renderedPage, _ := visualize.GenerateBOSHPage("variables")
 	fmt.Fprintf(w, renderedPage)
 }
 
@@ -208,6 +226,13 @@ func (c VisualizeCmd) serveAPICommand(w http.ResponseWriter, r *http.Request) {
 
 	if cmdName != "curl" {
 		cmd.Args = append(cmd.Args, "--json")
+	}
+
+	if cmdName == "credhub" {
+		cmd = boshsys.Command{
+			Name: "credhub",
+			Args: []string{"get"},
+		}
 	}
 
 	requestPassedInOpts := theRequest.Arguments
