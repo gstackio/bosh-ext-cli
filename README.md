@@ -33,6 +33,19 @@ $ export BOSH_ENVIRONMENT=vbox
 $ out/bosh-ext web
 ```
 
+- Visualize Deployments, Links, Releases, Tasks, Events, Configs and Variables
+  in a web browser
+
+```
+$ out/bosh-ext visualize
+Starting server on http://127.0.0.1:9090
+```
+
+The visualization features have been presented in
+“(_Making Sense of BOSH Links Through Visualization_)[https://youtu.be/OnZePLee_Po]”,
+a talk given by Jamil Shamy & Saman Alvi in October 2018, at 2nd CF European Summit in Basel.
+
+
 ## Build & Development
 
 ```
